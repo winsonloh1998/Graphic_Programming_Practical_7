@@ -34,6 +34,10 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 			questionNo = 1;
 		else if (wParam == '2')
 			questionNo = 2;
+		else if (wParam == '3') {
+			questionNo = 3;
+			glLoadIdentity();
+		}
 		else if (wParam == 'C')
 			imageFileName = "creeper.bmp";
 		else if (wParam == 'B')
@@ -51,7 +55,6 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 
 	return DefWindowProc(hWnd, msg, wParam, lParam);
 }
-
 //--------------------------------------------------------------------
 
 bool initPixelFormat(HDC hdc)
@@ -218,6 +221,228 @@ void drawCube(float s) {
 	glEnd();
 }
 
+void iceCreamCone() {
+	//Step 3: Initialize texture info
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+	hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL),
+		"cone.bmp", IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION |
+		LR_LOADFROMFILE);
+	GetObject(hBMP, sizeof(BMP), &BMP);
+
+	glEnable(GL_TEXTURE_2D);
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
+		GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+		GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth,
+		BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
+
+
+	GLUquadricObj *cone = NULL;
+	cone = gluNewQuadric();
+
+	glPushMatrix();
+	glRotatef(90, 1, 0, 0);
+	//glColor3f(0.82, 0.41, 0.12);
+	gluQuadricDrawStyle(cone, GLU_FILL);
+	gluQuadricTexture(cone, true);
+	gluCylinder(cone, 0.2, 0.0, 0.7, 10, 30);
+	gluDeleteQuadric(cone);
+	glPopMatrix();
+
+	glDisable(GL_TEXTURE_2D);
+	DeleteObject(hBMP);
+	glDeleteTextures(1, &texture);
+}
+
+void topping() {
+	//Strawberry
+	//Step 3: Initialize texture info
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+	hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL),
+		"strawberry.bmp", IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION |
+		LR_LOADFROMFILE);
+	GetObject(hBMP, sizeof(BMP), &BMP);
+
+	glEnable(GL_TEXTURE_2D);
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
+		GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+		GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth,
+		BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
+
+	//Cone
+	GLUquadricObj *cone = NULL;
+	cone = gluNewQuadric();
+
+	glPushMatrix();
+	glTranslatef(0.1, 0.55, 0.1);
+	glRotatef(90, 1, 0, 0);
+
+	gluQuadricDrawStyle(cone, GLU_FILL);
+	gluQuadricTexture(cone, true);
+	//base , top , height
+	gluCylinder(cone, 0.05, 0.01, 0.1, 10, 30);
+	gluDeleteQuadric(cone);
+	glPopMatrix();
+
+	//Sphere
+	GLUquadricObj *sphere = NULL;
+	sphere = gluNewQuadric();
+
+	glPushMatrix();
+	glTranslatef(0.1, 0.55, 0.1);
+	gluQuadricDrawStyle(sphere, GLU_FILL);
+	gluQuadricTexture(sphere, true);
+	//Slices - Vertical/ Longtitude
+	//Stacks - Horizontal/ Latitude
+	gluSphere(sphere, 0.048, 30, 30);
+	gluDeleteQuadric(sphere);
+	glPopMatrix();
+
+	glDisable(GL_TEXTURE_2D);
+	DeleteObject(hBMP);
+	glDeleteTextures(1, &texture);
+
+	/////////////////////////////////////////////////////////////////////////
+
+	//Step 3: Initialize texture info
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+	hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL),
+		"stick.bmp", IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION |
+		LR_LOADFROMFILE);
+	GetObject(hBMP, sizeof(BMP), &BMP);
+
+	glEnable(GL_TEXTURE_2D);
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
+		GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+		GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth,
+		BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
+
+	//Upper Part
+	GLUquadricObj *upper = NULL;
+	upper = gluNewQuadric();
+
+	glPushMatrix();
+	glTranslatef(0.1, 0.60, 0.1);
+	glRotatef(90, 1, 0, 0);
+	//glColor3f(0, 1, 0);
+
+	gluQuadricDrawStyle(upper, GLU_FILL);
+	gluQuadricTexture(upper, true);
+	//base , top , height
+	gluCylinder(upper, 0.015, 0.015, 0.06, 10, 30);
+	gluDeleteQuadric(upper);
+	glPopMatrix();
+
+	//Stick
+	GLUquadricObj *stick = NULL;
+	stick = gluNewQuadric();
+
+	glPushMatrix();
+	glTranslatef(0.1, 0.61, 0.1);
+	glRotatef(90, 1, 0, 0);
+
+	gluQuadricDrawStyle(stick, GLU_FILL);
+	gluQuadricTexture(stick, true);
+	//base , top , height
+	gluCylinder(stick, 0.005, 0.005, 0.02, 10, 30);
+	gluDeleteQuadric(stick);
+	glPopMatrix();
+
+	glDisable(GL_TEXTURE_2D);
+	DeleteObject(hBMP);
+	glDeleteTextures(1, &texture);
+}
+
+void oneScoop() {
+	//Step 3: Initialize texture info
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+	hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL),
+		"vanilla.bmp", IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION |
+		LR_LOADFROMFILE);
+	GetObject(hBMP, sizeof(BMP), &BMP);
+
+	glEnable(GL_TEXTURE_2D);
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
+		GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+		GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth,
+		BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
+
+	GLUquadricObj *sphere = NULL;
+	sphere = gluNewQuadric();
+
+	glPushMatrix();
+	glTranslatef(0.0, 0.35, 0.0);
+	gluQuadricDrawStyle(sphere, GLU_FILL);
+	//Slices - Vertical/ Longtitude
+	//Stacks - Horizontal/ Latitude
+	gluQuadricTexture(sphere, true);
+	gluSphere(sphere, 0.21, 30, 30);
+	gluDeleteQuadric(sphere);
+	glPopMatrix();
+
+	glDisable(GL_TEXTURE_2D);
+	DeleteObject(hBMP);
+	glDeleteTextures(1, &texture);
+}
+
+void twoScoop() {
+	//Step 3: Initialize texture info
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+	hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL),
+		"mint.bmp", IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION |
+		LR_LOADFROMFILE);
+	GetObject(hBMP, sizeof(BMP), &BMP);
+
+	glEnable(GL_TEXTURE_2D);
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
+		GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+		GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth,
+		BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
+
+	GLUquadricObj *sphere = NULL;
+	sphere = gluNewQuadric();
+
+	glPushMatrix();
+	glTranslatef(0.0, 0.05, 0.0);
+	gluQuadricDrawStyle(sphere, GLU_FILL);
+	gluQuadricTexture(sphere, true);
+	//Slices - Vertical/ Longtitude
+	//Stacks - Horizontal/ Latitude
+	gluSphere(sphere, 0.23, 30, 30);
+	gluDeleteQuadric(sphere);
+	glPopMatrix();
+
+	glDisable(GL_TEXTURE_2D);
+	DeleteObject(hBMP);
+	glDeleteTextures(1, &texture);
+}
+
+void drawIceCream() {
+	topping();
+	oneScoop();
+	twoScoop();
+	iceCreamCone();
+}
+
 void display(LPCSTR textureFile) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
@@ -231,32 +456,38 @@ void display(LPCSTR textureFile) {
 		glDeleteTextures(1, &texture);
 	}
 
-	//Step 3: Initialize texture info
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
-	hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL),
-		textureFile, IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION |
-		LR_LOADFROMFILE);
-	GetObject(hBMP, sizeof(BMP), &BMP);
+	if (questionNo == 3) 
+	{
+		drawIceCream();
+	}
+	else 
+	{
+		//Step 3: Initialize texture info
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+		hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL),
+			textureFile, IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION |
+			LR_LOADFROMFILE);
+		GetObject(hBMP, sizeof(BMP), &BMP);
 
+		glEnable(GL_TEXTURE_2D);
+		glGenTextures(1, &texture);
+		glBindTexture(GL_TEXTURE_2D, texture);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
+			GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+			GL_LINEAR);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth,
+			BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
 
-	glEnable(GL_TEXTURE_2D);
-	glGenTextures(1, &texture);
-	glBindTexture(GL_TEXTURE_2D, texture);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
-		GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-		GL_LINEAR);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth,
-		BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
+		if (questionNo == 1)
+			drawPyramid();
+		else if (questionNo == 2)
+			drawCube(0.5);
 
-	if (questionNo == 1)
-		drawPyramid();
-	else if (questionNo == 2)
-		drawCube(0.5);
-
-	glDisable(GL_TEXTURE_2D);
-	DeleteObject(hBMP);
-	glDeleteTextures(1, &texture);
+		glDisable(GL_TEXTURE_2D);
+		DeleteObject(hBMP);
+		glDeleteTextures(1, &texture);
+	}
 }
 //--------------------------------------------------------------------
 
